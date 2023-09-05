@@ -1,0 +1,111 @@
+
+package com.mycompany.proveedores;
+
+import java.sql.CallableStatement;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+/**
+ *
+ * @author valer
+ */
+public class CProveedores {
+    int id;
+    String nombre,Razonsocial,Direccion,telefono;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getRazonsocial() {
+        return Razonsocial;
+    }
+
+    public void setRazonsocial(String Razonsocial) {
+        this.Razonsocial = Razonsocial;
+    }
+
+    public String getDireccion() {
+        return Direccion;
+    }
+
+    public void setDireccion(String Direccion) {
+        this.Direccion = Direccion;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public void insertarProveedor(JTextField paramNombres, JTextField paramRazon,JTextField paramDireccion, JTextField paramTelefono){
+        setNombre(paramNombres.getText());
+        setTelefono(paramTelefono.getText());
+        setDireccion(paramDireccion.getText());
+        setRazonsocial(paramRazon.getText());
+        DBConnection objetoConexion= new DBConnection();
+        String insert="INSERT INTO proveedores (nombre,razon_social,direccion,telefono) VALUES(?,?,?,?);";
+        try{
+            CallableStatement cs=objetoConexion.establecerConexion().prepareCall(insert);
+            cs.setString(1,getNombre());
+            cs.setString(2,getRazonsocial());
+            cs.setString(3,getDireccion());
+            cs.setString(4,getTelefono());
+            cs.execute();
+            JOptionPane.showMessageDialog(null, "Se han insertado los datos correctamente");
+            
+        }catch(Exception e){
+             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }
+    public void eliminarProveedor(JTextField paramCodigo){
+        setId(Integer.parseInt(paramCodigo.getText()));
+       
+        DBConnection objetoConexion= new DBConnection();
+        String delete="DELETE FROM proveedores WHERE proveedores.id=?;";
+        try{
+            CallableStatement cs=objetoConexion.establecerConexion().prepareCall(delete);
+            cs.setInt(1,getId());
+            cs.execute();
+            JOptionPane.showMessageDialog(null, "Se eliminaron los datos correctamente");
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }
+    public void actualizarProveedor(JTextField paramCodigo,JTextField paramNombres, JTextField paramRazon,JTextField paramDireccion,JTextField paramTelefono){
+        setId(Integer.parseInt(paramCodigo.getText()));
+        setNombre(paramNombres.getText());
+        setRazonsocial(paramRazon.getText());
+        setDireccion(paramDireccion.getText());
+        setTelefono(paramTelefono.getText());
+        DBConnection objetoConexion= new DBConnection();
+        String update="UPDATE proveedores set nombre=?,razonsocial=?,direccion=?, telefono=? WHERE id=?;";
+        try{
+            CallableStatement cs=objetoConexion.establecerConexion().prepareCall(update);
+            cs.setString(1,getNombre());
+            cs.setString(2,getRazonsocial());
+            cs.setString(3,getDireccion());
+            cs.setString(4,getTelefono());
+            cs.setInt(5,getId());
+            cs.execute();
+            JOptionPane.showMessageDialog(null, "Se modificaron los datos correctamente");
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }  
+        
+    }
+}
